@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Drive Direct Link Generator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Google Drive Direct Link Generator</h1>
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="driveLink">Enter Google Drive Link:</label>
+                    <input type="text" class="form-control" id="driveLink" placeholder="https://drive.google.com/file/d/FILE_ID/view">
+                </div>
+                <button id="submit" class="btn btn-primary btn-block">Submit</button>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-8">
+                <h2>Direct Download Link:</h2>
+                <div id="outputLink"></div>
+                <button id="copyButton" class="btn btn-secondary mt-2" style="display: none;">Copy Link</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#submit').click(function() {
+                var driveLink = $('#driveLink').val();
+                var fileId = driveLink.match(/[-\w]{25,}/);
+                if (fileId) {
+                    var directLink = "https://drive.google.com/uc?export=download&id=" + fileId[0];
+                    $('#outputLink').html('<a target="_blank" href="' + directLink + '" class="alert alert-success">' + directLink + '</a>');
+                    $('#copyButton').show();
+                } else {
+                    $('#outputLink').html('<div class="alert alert-danger">Invalid Google Drive link.</div>');
+                    $('#copyButton').hide();
+                }
+            });
+
+            $('#copyButton').click(function() {
+                var $temp = $("<input>");
+                $("body").append($temp);
+                $temp.val($('#outputLink a').attr("href")).select();
+                document.execCommand("copy");
+                $temp.remove();
+                alert("Link copied to clipboard!");
+            });
+        });
+    </script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+</body>
+</html>
